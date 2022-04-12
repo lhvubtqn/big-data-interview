@@ -2,7 +2,7 @@
 
 ### 1. HDFS 1.0
 
-HDFS adopts the Master/Slave architecture, and an HDFS cluster contains a single NameNode and multiple DataNode nodes.
+HDFS adopts the Master/Slave architecture, and an HDFS cluster contains a single NameNode and multiple DataNodes.
 
 #### NameNode
 
@@ -11,9 +11,9 @@ The NameNode is responsible for managing the metadata of the entire distributed 
 - Directory tree structure;
 - The mapping relationship between files and data blocks;
 - Management data such as block copies and their storage locations;
-- Status monitoring of DataNode, the two transmit management information and data information through heartbeats at intervals. Through this information transmission, NameNode can learn the block information saved by each DataNode, the health status of DataNode, and instruct DataNode to start and stop, etc. (If a DataNode is found to be faulty, the NameNode will back up the blocks it is responsible for on other DataNodes).
+- Status of DataNodes. DataNodes & NameNode transmit management information and data information through heartbeats at intervals. Through this information transmission, NameNode can learn the block information saved by each DataNode, the health status of DataNode, and instruct DataNodes to start and stop, etc. (If a DataNode is found to be faulty, the NameNode will back up the blocks it is responsible for on other DataNodes).
 
-This data is kept in memory, and two metadata management files are kept on disk: `fsimage` and `editlog`.
+The above data are kept in memory, and there are two metadata management files that are kept on disk: `fsimage` and `editlog`.
 
 - `fsimage`: is the image file of the memory namespace metadata in the external storage;
 - `editlog`: It is a write-ahead-log file for various metadata operations. Before the changes in memory data are reflected, the operations are first recorded in the editlog to prevent data loss.
@@ -36,7 +36,7 @@ Responsible for the actual storage and reading and writing of data blocks. The d
 
 - **Active NameNode and Standby NameNode**: Two NameNodes form mutual backup, one is in Active state and is the main NameNode, and the other is in Standby state and is the standby NameNode, only the main NameNode can provide external read and write services;
 
-- **ZKFailoverController** (active/standby switchover controller, FC): ZKFailoverController runs as an independent process and performs overall control over the active/standby switchover of the NameNode. ZKFailoverController can detect the health status of NameNode in time, and realize automatic active/standby election and switchover with Zookeeper when the primary NameNode fails (of course, NameNode currently supports manual active/standby switchover that does not depend on Zookeeper);
+- **ZKFailoverController** (active/standby switchover controller, FC): ZKFailoverController runs as an independent process and performs overall control over the active/standby switchover of the NameNode. ZKFailoverController can detect the health status of NameNode in time, and invoke automatic active/standby election and switchover with Zookeeper when the primary NameNode fails (of course, NameNode currently supports manual active/standby switchover that does not depend on Zookeeper);
 
 - **Zookeeper cluster**: Provides active and standby election support for active and standby switching controllers;
 
